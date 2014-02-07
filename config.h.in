@@ -1,0 +1,7 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+#define UBUNTU_NAME               "@UBUNTU_NAME@"
+#define UBUNTU_INSTALL_DATADIR    "@UBUNTU_FULL_DIR@"
+#define UBUNTU_DEV_DATADIR        "@UBUNTU_SOURCE_DIR@"
+#define UBUNTU_BINDIR             "@CMAKE_INSTALL_FULL_BINDIR@"
+#endif

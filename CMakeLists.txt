@@ -1,6 +1,13 @@
 if(WITH_QT5)
-    # The Qt5's qt5_use_modules is only available on 2.8.9 or later -- sweet, isn't it?
+    # The Qt5's qt5_use_modules is only available on 2.8.9 or later
     cmake_minimum_required(VERSION 2.8.9)
+elseif (WITH_UBUNTU)
+    cmake_minimum_required(VERSION 2.8.9)
+    # Find includes in corresponding build directories
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+    # Instruct CMake to run moc automatically when needed.
+    set(CMAKE_AUTOMOC ON)
+
 else()
     cmake_minimum_required(VERSION 2.8.7)
 endif()
@@ -35,11 +42,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_COMPILER_FLAGS}")
 
 include(TrojitaOption)
 
-trojita_option(WITH_DESKTOP "Build desktop version" ON)
+trojita_option(WITH_DESKTOP "Build desktop version" OFF)
 trojita_option(WITH_HARMATTAN "Build MeeGo Harmattan version" OFF "NOT WITH_DESKTOP")
+trojita_option(WITH_UBUNTU "Build for the Ubuntu SDK" OFF "NOT WITH_DESKTOP")
 trojita_option(WITH_QT5 "Build with Qt5 library" OFF)
 trojita_option(WITH_RAGEL "Build with Ragel library" AUTO)
 trojita_option(WITH_ZLIB "Build with zlib library" AUTO)
+## should this be turned off with Ubuntu will Ubuntu Package all the shared libs themselfs for chroot app space ?
 trojita_option(WITH_SHARED_PLUGINS "Enable shared dynamic plugins" ON)
 trojita_option(WITH_TESTS "Build tests" ON "NOT WITH_HARMATTAN")
 trojita_option(DEV_FATAL_WARNINGS "Turn build warnings into errors (developers only)" OFF)
@@ -59,6 +68,34 @@ if(WITH_QT5)
     if(WITH_TESTS)
         find_package(Qt5Test REQUIRED)
     endif()
+    if(WITH_UBUNTU)
+        message(STATUS "Building the Qt5 and Ubuntu SDK")
+        find_package(Qt5Gui REQUIRED)
+        find_package(Qt5Network REQUIRED)
+        find_package(Qt5Sql REQUIRED)
+        find_package(Qt5Core REQUIRED)
+        find_package(Qt5WebKitWidgets REQUIRED)
+        find_package(Qt5Widgets REQUIRED)
+        find_package(Qt5LinguistTools)
+        find_package(Qt5Quick REQUIRED)
+        find_package(Qt5Qml REQUIRED)
+# qml plugin path
+    execute_process(
+            COMMAND qmake -query QT_INSTALL_QML
+            OUTPUT_VARIABLE QT_IMPORTS_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(QMLPLUGIN_INSTALL_PREFIX "${QT_IMPORTS_DIR}")
+        set(UBUNTU_DIR ${CMAKE_INSTALL_DATADIR}/trojita)
+        set(UBUNTU_FULL_DIR ${CMAKE_INSTALL_FULL_DATADIR}/trojita)
+        set(UBUTNU_NAME "Trojita")
+        set(UBUNTU_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/)
+        # config file
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+                "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+                IMMEDIATE @ONLY)
+        include(GNUInstallDirs)
+    endif()
     if(Qt5LinguistTools_FOUND)
         find_package(Qt5LinguistForTrojita)
     endif()
@@ -73,6 +110,7 @@ else()
     if(WITH_HARMATTAN)
         set(QT_USE_QTDECLARATIVE 1)
     endif()
+
     trojita_find_package(Qt4 4.6 "http://qt-project.org" "Qt4" "Needed for building" REQUIRED)
     include(${QT_USE_FILE})
     trojita_check_qt4_module(QTCORE REQUIRED)
@@ -140,7 +178,7 @@ add_definitions(-DQT_STRICT_ITERATORS)
 include(GenerateExportHeader)
 add_compiler_export_flags()
 
-if(NOT WITH_QT5 AND CMAKE_VERSION VERSION_LESS 2.8.10)
+if(NOT WITH_QT5 AND CMAKE_VERSION VERSION_LESS 2.8.10 AND NOT WITH_UBUNTU)
     set(SUPPORTS_TARGET_INCLUDES 0)
     include_directories(
         ${QT_MKSPECS_DIR}/default
@@ -266,7 +304,7 @@ if(WITH_ZLIB)
     include_directories(${ZLIB_INCLUDE_DIR})
 endif()
 
-if(NOT WITH_QT5)
+if(NOT WITH_QT5 AND NOT WITH_UBUNTU)
     set(path_mimetypesqt4 ${CMAKE_CURRENT_SOURCE_DIR}/src/mimetypes-qt4)
     set(libMimetypesQt4_SOURCES
         ${path_mimetypesqt4}/io/qstandardpaths.cpp
@@ -491,10 +529,18 @@ set(trojitaHarmattan_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Harmattan/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Harmattan/qmlapplicationviewer/qmlapplicationviewer.cpp
 )
+set(trojitaUbuntu_SOURCES
+  	${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/qtquick2applicationviewer/qtquick2applicationviewer.cpp
+)
+set(libQt5NAMWebView_SOURCES
+ 	${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/plugin.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/qdeclarativewebview.cpp
+)
 
 if(LinguistForTrojita_FOUND OR Qt5LinguistForTrojita_FOUND)
     file(GLOB_RECURSE lang_PO "${CMAKE_CURRENT_SOURCE_DIR}/po/trojita_common_*.po")
-    if(WITH_QT5)
+    if(WITH_QT5 OR WITH_UBUNTU)
         qt5_wrap_po(trojita_QM ${lang_PO})
     else()
         qt4_wrap_po(trojita_QM ${lang_PO})
@@ -546,7 +592,7 @@ else()
     set_property(TARGET Plugins APPEND PROPERTY COMPILE_DEFINITIONS QT_STATICPLUGIN)
 endif()
 set_target_properties(Plugins PROPERTIES OUTPUT_NAME trojita_plugins)
-if(WITH_QT5)
+if(WITH_QT5 OR WITH_UBUNTU)
     qt5_use_modules(Plugins Core)
 else()
     target_link_libraries(Plugins ${QT_QTCORE_LIBRARY})
@@ -566,7 +612,7 @@ target_link_libraries(MSA Imap Streams qwwsmtpclient ${QT_QTCORE_LIBRARY})
 
 add_library(Composer ${libComposer_SOURCES})
 target_link_libraries(Composer Common MSA Streams qwwsmtpclient ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
-if(NOT WITH_QT5)
+if(NOT WITH_QT5 AND NOT WITH_UBUNTU)
     target_link_libraries(Composer MimetypesQt4)
 endif()
 
@@ -576,7 +622,7 @@ if(WITH_ZLIB)
     target_link_libraries(Imap ${ZLIB_LIBRARIES})
 endif()
 
-if(NOT WITH_QT5)
+if(NOT WITH_QT5 OR NOT WITH_UBUNTU)
     add_library(MimetypesQt4 ${libMimetypesQt4_SOURCES})
     if(SUPPORTS_TARGET_INCLUDES)
         set_property(TARGET MimetypesQt4 APPEND PROPERTY INCLUDE_DIRECTORIES
@@ -594,7 +640,7 @@ endforeach()
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/static_plugins.h.in ${CMAKE_CURRENT_BINARY_DIR}/static_plugins.h)
 
 if(WITH_DESKTOP)
-    if(WITH_QT5)
+    if(WITH_QT5 OR WITH_UBUNTU)
         qt5_wrap_ui(libAbookAddressbook_UI_OUT ${libAbookAddressbook_UI})
         qt5_wrap_ui(libDesktopGui_UI_OUT ${libDesktopGui_UI})
         qt5_add_resources(libDesktopGui_RESOURCES_OUT ${libDesktopGui_RESOURCES})
@@ -619,7 +665,7 @@ if(WITH_DESKTOP)
     # On other platforms WIN32 flag is ignored
     add_executable(trojita WIN32 ${trojita_desktop_SOURCES} ${trojita_QM})
     target_link_libraries(trojita AppVersion Common DesktopGui ${STATIC_PLUGINS} ${QT_QTMAIN_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
-    if(NOT WITH_QT5)
+    if(NOT WITH_QT5 OR NOT WITH_UBUNTU)
         target_link_libraries(trojita MimetypesQt4)
     endif()
     if(WITH_ZLIB)
@@ -628,6 +674,7 @@ if(WITH_DESKTOP)
 
     add_executable(be.contacts ${be_contacts_SOURCES})
     target_link_libraries(be.contacts AbookAddressbook ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+
 elseif(WITH_HARMATTAN)
     add_library(trojitaqnamwebviewplugin SHARED ${libQNAMWebView_SOURCES})
     add_executable(trojita-tp ${trojitaHarmattan_SOURCES})
@@ -639,7 +686,29 @@ elseif(WITH_HARMATTAN)
         ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY})
 endif()
 
-if(WITH_QT5)
+
+#// add the Ubuntu Libs Here ALSO
+if(WITH_UBUNTU)
+    add_library(trojitaqnamwebviewplugin SHARED ${libQt5NAMWebView_SOURCES})
+    add_executable(trojita-tp ${trojitaUbuntu_SOURCES})
+    if(SUPPORTS_TARGET_INCLUDES)
+        set_property(TARGET trojita-tp APPEND PROPERTY INCLUDE_DIRECTORIES
+            ${QT_MKSPECS_DIR}/default ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/qtquick2applicationviewer)
+    endif()
+target_link_libraries(trojita-tp trojitaqnamwebviewplugin AppVersion Imap MSA Streams qwwsmtpclient Common Composer
+    ${QT5CORE_LIBRARY}
+    ${QT5WIDGETS_LIBRARY}
+    ${QT5SQL_LIBRARY}
+    ${QT5NETWORK_LIBRARY}
+    ${QT5WEBKIT_LIBRARY}
+    ${QT5WEBKITWIDGETS_LIBRARY}
+    ${QT5GUI_LIBRARY}
+    ${QT5QUICK_LIBRARY}
+    ${QT5QML_LIBRARY}
+)
+endif()
+
+if(WITH_QT5 AND NOT WITH_UBUNTU)
     qt5_use_modules(AppVersion Core)
     qt5_use_modules(Common Core Network)
     qt5_use_modules(Streams Network)
@@ -651,8 +720,21 @@ if(WITH_QT5)
     qt5_use_modules(AbookAddressbook Widgets)
     qt5_use_modules(be.contacts Widgets)
     qt5_use_modules(trojita Widgets Network)
-endif()
 
+elseif(WITH_UBUNTU AND WITH_QT5)
+   qt5_use_modules(AppVersion Core)
+    qt5_use_modules(Common Core Network)
+    qt5_use_modules(Streams Network)
+    qt5_use_modules(qwwsmtpclient Network)
+    qt5_use_modules(MSA Network)
+    qt5_use_modules(Composer Gui Network)
+    qt5_use_modules(Imap Gui Network Sql)
+#    qt5_use_modules(AbookAddressbook Widgets)
+#    qt5_use_modules(be.contacts Widgets)
+    qt5_use_modules(trojita-tp Widgets Network Core Qml Quick)
+    qt5_use_modules(trojitaqnamwebviewplugin Widgets Core Qml Quick WebKit Network Gui WebKitWidgets)
+
+endif()
 if(WITH_SHARED_PLUGINS)
     install(TARGETS Plugins DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
@@ -662,6 +744,64 @@ if(WITH_DESKTOP)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui/trojita.desktop DESTINATION share/applications/)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/icons/trojita.png DESTINATION share/icons/hicolor/32x32/apps/)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/icons/trojita.svg DESTINATION share/icons/hicolor/scalable/apps/)
+endif()
+
+
+if(WITH_UBUNTU)
+set(
+        trojita_ubuntu_path ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu
+    )
+include_directories(
+    ${CMAKE_BINARY_DIR}
+#    ${trojita_ubuntu_path}
+)
+#FIXME SEE if Upstream wants to make subdir cmake for whole project ?
+    set(UBUNTU_QMLS
+        ${trojita_ubuntu_path}/qml/trojita/AddressWidget.qml
+        ${trojita_ubuntu_path}/qml/trojita/NetworkPolicyButton.qml
+        ${trojita_ubuntu_path}/qml/trojita/BackButton.qml
+        ${trojita_ubuntu_path}/qml/trojita/OneMessagePage.qml
+        ${trojita_ubuntu_path}/qml/trojita/icon-m-settings-keychain.svg
+        ${trojita_ubuntu_path}/qml/trojita/PageHeader.qml
+        ${trojita_ubuntu_path}/qml/trojita/ImapSettings.qml
+        ${trojita_ubuntu_path}/qml/trojita/PasswordInputSheet.qml
+        ${trojita_ubuntu_path}/qml/trojita/MailboxListPage.qml
+        ${trojita_ubuntu_path}/qml/trojita/PercentageSectionScroller.qml
+        ${trojita_ubuntu_path}/qml/trojita/MainPage.qml
+        ${trojita_ubuntu_path}/qml/trojita/SslSheet.qml
+        ${trojita_ubuntu_path}/qml/trojita/main.qml
+        ${trojita_ubuntu_path}/qml/trojita/ToggleableToolIcon.qml
+        ${trojita_ubuntu_path}/qml/trojita/MessageListPage.qml
+        ${trojita_ubuntu_path}/qml/trojita/Utils.js
+        )
+    #make QML visable to QtCreator
+    add_custom_target(components_QmlFiles ALL SOURCES ${UBUNTU_QMLS})
+
+    install(
+        FILES ${UBUNTU_QMLS}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/trojita/
+    )
+    install(
+        TARGETS trojita-tp
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+    install(
+        TARGETS trojitaqnamwebviewplugin LIBRARY
+        DESTINATION ${QMLPLUGIN_INSTALL_PREFIX}/Qt5NAMWebView
+    )
+    install(
+        FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/qmldir
+        DESTINATION ${QMLPLUGIN_INSTALL_PREFIX}/Qt5NAMWebView
+    )
+    install(
+        FILES ${trojita_ubuntu_path}/trojita-tp.desktop
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+    )
+
+    install(
+        FILES ${trojita_ubuntu_path}/trojita-tp.png
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/48x48/apps
+    )
 endif()
 
 if(WITH_HARMATTAN)
@@ -702,7 +842,7 @@ if(WITH_TESTS)
         tests/Utils/LibMailboxSync.cpp
     )
     add_library(test_LibMailboxSync ${test_LibMailboxSync_SOURCES})
-    if(WITH_QT5)
+    if(WITH_QT5 OR WITH_UBUNTU)
         qt5_use_modules(test_LibMailboxSync Test Network)
     endif()
     if(SUPPORTS_TARGET_INCLUDES)
@@ -716,7 +856,7 @@ if(WITH_TESTS)
         set(test_${fname}_SOURCES tests/${dir}/test_${fname}.cpp)
         add_executable(test_${fname} ${test_${fname}_SOURCES})
         target_link_libraries(test_${fname} Imap MSA Streams Common Composer test_LibMailboxSync)
-        if(WITH_QT5)
+        if(WITH_QT5 OR WITH_UBUNTU)
             qt5_use_modules(test_${fname} Network Sql Test Widgets)
         else()
             target_link_libraries(test_${fname} ${QT_QTSQL_LIBRARY} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
@@ -736,7 +876,7 @@ if(WITH_TESTS)
     trojita_test(Composer Composer_Submission)
     trojita_test(Composer Composer_responses)
     trojita_test(Composer Html_formatting)
-    if(WITH_QT5)
+    if(WITH_QT5 OR WITH_UBUNTU)
         qt5_use_modules(test_Composer_responses WebKitWidgets)
         qt5_use_modules(test_Html_formatting WebKitWidgets)
     else()
