@@ -23,10 +23,12 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItems
-// FIXME the ssl is not working correctly and not connecting to the sslsheet corectly
-// Page's header titles are not transparent/visible/whatever
+
 Page {
     id: flickable
+    visible: false
+    title: qsTr("Server Settings")
+
     property alias imapServer: imapServerInput.text
     property alias imapPort: imapPortInput.text
     property alias imapUserName: imapUserNameInput.text
@@ -34,9 +36,7 @@ Page {
     property string imapSslMode: useSSLSwitch.checked === true ?  "SSL" : "No"
     property int  imapSslModelIndex: dialogView.currentIndex
     property bool usingSSL
-    visible: false
-    title: qsTr("Server Settings")
-//    anchors.fill: parent
+
     Column {
         id: col
         spacing: 10
@@ -84,8 +84,7 @@ Page {
             opacity:  imapServerInput.activeFocus ? 1 : 0
             height:  opacity === 0 ?  0 :  units.gu(5)
             anchors {left: col.left; right: col.right}
-            text: qsTr("common servers")
-//                dialogView.model.get(dialogView.currentIndex).port + ": " + dialogView.model.get(dialogView.selectedIndex).name
+            text: qsTr("Common servers")
             onClicked: {
                 pageStack.push(commonServerPage)
             }
@@ -112,7 +111,6 @@ Page {
             height:  opacity === 0 ?  0 :  units.gu(4.5)
             anchors {left: col.left; right: col.right}
             text: qsTr("common ports")
-//                dialogView.model.get(dialogView.currentIndex).port + ": " + dialogView.model.get(dialogView.selectedIndex).name
             onClicked: {
                 pageStack.push(encryptionMethodPage)
             }
@@ -128,8 +126,6 @@ Page {
            }
            Switch{
                id: useSSLSwitch
-//               checked: imapPortInput.text = 993 ? true : false
-//           onCheckedChanged:  checked === true  ? imapAccess.setSslPolicy(true) : imapAccess.setSslPolicy(false )
            }
         }
 
@@ -139,7 +135,6 @@ Page {
             width:  parent.width
             anchors{
                 horizontalCenter: parent.horizontalCenter
-//                top:imapPortInput.bottom
             }
             onClicked: {
                 if (imapAccess.imapModel) {
@@ -164,7 +159,6 @@ Page {
     }
 
     Component.onCompleted: {
-        console.log("JOSPEPH   "+   imapAccess.imapModel)
         imapSettings.imapServer = imapAccess.server
         if (imapAccess.port > 0){
             imapSettings.imapPort = imapAccess.port
@@ -183,42 +177,10 @@ Page {
             usingSSL = false
         }
         if(usingSSL === true ){
-            //this will crash the app
-//            imapAccess.setSslPolicy(true)
             useSSLSwitch.checked = true
         }
         if (usingSSL === false ){
-//            same here
-//            imapAccess.setSslPolicy(false)
             useSSLSwitch.checked = false
         }
     }
-
-//    Page {
-//        id: encryptionMethodPage
-//        title: qsTr("Secure connection")
-//        visible: false
-//        ListView {
-//            id:dialogView
-//            width: parent.width
-//            height: parent.height
-//            model: PortModel{}
-//            delegate: ListItems.Subtitled{
-//                id: itmDel
-//                text: name
-//                subText: port
-//                MouseArea{
-//                    anchors.fill: parent
-//                    onClicked: {
-//                        imapPortInput.text = port
-//                        pageStack.pop()
-//                    }
-//                }
-//            }
-//        }
-//    CommonServerPage{
-//     id: commonServerPage
-//     visible: false
-//    }
-//}
 }

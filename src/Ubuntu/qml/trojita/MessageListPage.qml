@@ -55,7 +55,7 @@ Page {
 }
 
 
-    //    tools: ToolbarItems{
+//    tools: ToolbarItems{
 //             NetworkPolicyButton {}
 //         }
 //    Component {
@@ -118,7 +118,7 @@ Page {
 //        id: scrollingMessageDelegate
 //ListItems.Standard{
 //}
-        //        Item {
+//        Item {
 //            width: view.width
 //            height: 120
 //            anchors.margins: UiConstants.DefaultMargin

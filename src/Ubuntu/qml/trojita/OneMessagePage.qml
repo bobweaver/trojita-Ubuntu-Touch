@@ -33,22 +33,22 @@ Page {
         visible: true
         ToolbarButton {
             id: messageReadButton
-//            toggled: imapAccess.oneMessageModel.isMarkedRead
-//            iconSource: "image://theme/icon-m-toolbar-done-white" + (toggled ? "-selected" : "")
+            //            toggled: imapAccess.oneMessageModel.isMarkedRead
+            //            iconSource: "image://theme/icon-m-toolbar-done-white" + (toggled ? "-selected" : "")
             onTriggered:  imapAccess.oneMessageModel.isMarkedRead = !imapAccess.oneMessageModel.isMarkedRead
         }
 
         ToolbarButton {
             id: messageDeleteButton
-//            toggled: imapAccess.oneMessageModel.isMarkedDeleted
-//            iconSource: "image://theme/icon-m-toolbar-delete-white" + (toggled ? "-selected" : "")
+            //            toggled: imapAccess.oneMessageModel.isMarkedDeleted
+            //            iconSource: "image://theme/icon-m-toolbar-delete-white" + (toggled ? "-selected" : "")
             onTriggered:  imapAccess.oneMessageModel.isMarkedDeleted = !imapAccess.oneMessageModel.isMarkedDeleted
         }
         NetworkPolicyButton {}
     }
 
     property string mailbox
-//    property alias url: messageView.url
+    //    property alias url: messageView.url
     function handleChangedEnvelope() {
         if (status === PageStatus.Active && !imapAccess.oneMessageModel.hasValidIndex)
             appWindow.showHome()
@@ -104,22 +104,6 @@ Page {
                     wrapMode: Text.WordWrap
                     text: qsTr("<b>Message ? :</b> ") + imapAccess.msgQNAM
                 }
-
-//                WebView{
-//                    id: messageView
-//                    networkAccessManager: imapAccess.msgQNAM
-//                    preferredWidth: view.width
-                    // Without specifying the width here, plaintext e-mails would cause useless horizontal scrolling
-//                    width: parent.width
-//                      height:parent.height
-                    // Setting the URL from here would not be enough, we really want to force a reload whenever the message changes,
-                    // even though the URL might remain the same
-
-//                    settings.userStyleSheetUrl: "data:text/css;charset=utf-8;base64," +
-//                                                Qt.btoa("* {color: white; background: black; font-size: " +
-//                                                        UiConstants.BodyTextFont.pixelSize + "px;};")
-//                }
-
                 // FIXME: move this to a dedicated page...
                 Component {
                     id: attachmentItemDelegate

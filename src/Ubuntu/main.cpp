@@ -56,8 +56,6 @@ int main(int argc, char *argv[])
     Imap::ImapAccess imapAccess(0, &s, QLatin1String("defaultAccount"));
     QQmlContext *ctxt = viewer.rootContext();
     ctxt->setContextProperty(QLatin1String("imapAccess"), &imapAccess);
-    //FixME for QWindow
-    //    viewer.setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
     viewer.setTitle("Trojita");
     viewer.setMainQmlFile(fullPath("/qml/trojita/main.qml"));
     viewer.showExpanded();

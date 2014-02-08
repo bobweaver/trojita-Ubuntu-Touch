@@ -62,24 +62,24 @@ Item {
                 rightMargin: 16
             }
         }
-Row {
-    spacing: 12
-    anchors.horizontalCenter: parent.horizontalCenter
-        Button{
-        id: okButton
-        text: "Confirm"
-        onClicked:{
-         passRoot.confirmClicked()
+        Row {
+            spacing: 12
+            anchors.horizontalCenter: parent.horizontalCenter
+            Button{
+                id: okButton
+                text: "Confirm"
+                onClicked:{
+                    passRoot.confirmClicked()
+                }
+            }
+            Button{
+                id: cancelButton
+                text: "Cancel"
+                onClicked:{
+                    passRoot.cancelClicked()
+                }
+            }
         }
-        }
-        Button{
-        id: cancelButton
-        text: "Cancel"
-        onClicked:{
-         passRoot.cancelClicked()
-        }
-        }
-   }
     }
     Component{
         id: authErrorPopup
@@ -90,26 +90,26 @@ Row {
 
 
             Column{
-            spacing: units.gu(1)
-            Button{
-                id:closePopUp
-             width: parent.width
-                text: "try again"
-                onClicked: {
-                    // TODO FLUSH cache and what not and try to login again
-                    PopupUtils.close(authErrorDialog)
+                spacing: units.gu(1)
+                Button{
+                    id:closePopUp
+                    width: parent.width
+                    text: "try again"
+                    onClicked: {
+                        // TODO FLUSH cache and what not and try to login again
+                        PopupUtils.close(authErrorDialog)
+                    }
                 }
-            }
-            Button{
-             id: filebugButton
-             width: parent.width
-             text: qsTr("File bug")
-            onClicked: {
-              PopupUtils.close(authErrorDialog)
-             // TODO MAKE A pagestack that returns the bug tracker
-                Qt.openUrlExternally("https://bugs.kde.org/enter_bug.cgi?product=trojita&format=guided")
-            }
-            }
+                Button{
+                    id: filebugButton
+                    width: parent.width
+                    text: qsTr("File bug")
+                    onClicked: {
+                        PopupUtils.close(authErrorDialog)
+                        // TODO MAKE A pagestack that returns the bug tracker
+                        Qt.openUrlExternally("https://bugs.kde.org/enter_bug.cgi?product=trojita&format=guided")
+                    }
+                }
             }
         }
     }

@@ -216,6 +216,5 @@ bool OneMessageModel::hasValidIndex() const
 {
     return m_message.isValid();
 }
-
 }
 }

@@ -26,9 +26,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItems
 
 Page {
     id: mailboxPage
-//    width: parent.width
-//    height: parent.height
-    title: qsTr("MailBox")
+    title: qsTr("Mail Box")
     visible:  false
     signal mailboxSelected(string mailbox)
     property int nestingDepth: 0
@@ -48,26 +46,26 @@ Page {
         return nestingDepth > 0
     }
 
-        ListView {
-            id: view
-            model: imapAccess.mailboxModel
-            width: parent.width
-            height: parent.height
-            delegate: ListItems.Subtitled{
-                id: titleText
-                text: shortMailboxName
-                subText: totalMessageCount + " total, " + unreadMessageCount + " unread"
+    ListView {
+        id: view
+        model: imapAccess.mailboxModel
+        width: parent.width
+        height: parent.height
+        delegate: ListItems.Subtitled{
+            id: titleText
+            text: shortMailboxName
+            subText: totalMessageCount + " total, " + unreadMessageCount + " unread"
             onClicked: {
-                    view.positionViewAtIndex(model.index, ListView.Visible);
-                    if (mailboxIsSelectable) {
-                        currentMailbox = shortMailboxName
-                        currentMailboxLong = mailboxName
-                        mailboxSelected(mailboxName)
-                    }
+                view.positionViewAtIndex(model.index, ListView.Visible);
+                if (mailboxIsSelectable) {
+                    currentMailbox = shortMailboxName
+                    currentMailboxLong = mailboxName
+                    mailboxSelected(mailboxName)
+                }
             }
-            }
-        }
-        Scrollbar {
-            flickableItem: view
         }
     }
+    Scrollbar {
+        flickableItem: view
+    }
+}

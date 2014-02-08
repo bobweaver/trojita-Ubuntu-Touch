@@ -43,13 +43,13 @@ MainView{
         networkOffline = true
     }
 
-//    change me to be correct notifcations via notify-send ?
+    //FIXME    change me to be correct notifcations via notify-send ?
 
-//    function showImapAlert(message) {
-//        alertBanner.text = message
-//        alertBanner.parent = pageStack.currentPage
-//        alertBanner.show()
-//    }
+    //    function showImapAlert(message) {
+    //        alertBanner.text = message
+    //        alertBanner.parent = pageStack.currentPage
+    //        alertBanner.show()
+    //    }
 
     function requestingPassword() {
         pageStack.push(passwordDialogPage)
@@ -61,7 +61,7 @@ MainView{
 
     function connectModels() {
         imapAccess.imapModel.connectionError.connect(showConnectionError)
-//        imapAccess.imapModel.alertReceived.connect(showImapAlert)
+        //        imapAccess.imapModel.alertReceived.connect(showImapAlert)
         imapAccess.imapModel.authRequested.connect(requestingPassword)
         imapAccess.imapModel.authAttemptFailed.connect(authAttemptFailed)
         imapAccess.imapModel.networkPolicyOffline.connect(function() {networkOffline = true})
@@ -102,10 +102,10 @@ MainView{
                     imapAccess.imapModel.imapPassword = undefined
                     pageStack.push(imapSettings)
                 }
-                }
+            }
         }
-//        FIXME Qt5NamWebView or a new QNetworkRequest
-//        If the users is using SSL  then push this page
+        //        FIXME Qt5NamWebView or a new QNetworkRequest
+        //        If the users is using SSL  then push this page
         Page{
             id: sslSheetPage
             visible: false
@@ -117,72 +117,72 @@ MainView{
                 onCancelClicked:  imapAccess.setSslPolicy(false)
             }
         }
-//        Acess Granted show MailBox Lists
+        //        Acess Granted show MailBox Lists
         MailboxListPage {
-                id: mailboxList
-                visible: false
-                model: imapAccess.mailboxModel ? imapAccess.mailboxModel : null
-                onMailboxSelected: {
-                    imapAccess.msgListModel.setMailbox(mailbox)
-                    messageList.scrollToBottom()
-                    pageStack.push(messageList)
-                }
-                // Looks like this gotta be in this file. If moved to the MailboxListPage.qml,
-                // QML engine complains about a binding loop.
-                // WTF?
+            id: mailboxList
+            visible: false
+            model: imapAccess.mailboxModel ? imapAccess.mailboxModel : null
+            onMailboxSelected: {
+                imapAccess.msgListModel.setMailbox(mailbox)
+                messageList.scrollToBottom()
+                pageStack.push(messageList)
+            }
+            // Looks like this gotta be in this file. If moved to the MailboxListPage.qml,
+            // QML engine complains about a binding loop.
+            // WTF?
 
-                //???? we should add a item to a loader here with some binding ?
-                property bool indexValid: mailboxList.model ? mailboxList.model.itemsValid : true
-                onIndexValidChanged:{
-                    if (indexValid !== true)
+            //???? we should add a item to a loader here with some binding ?
+            property bool indexValid: mailboxList.model ? mailboxList.model.itemsValid : true
+            onIndexValidChanged:{
+                if (indexValid !== true)
                     return appWindow.showHome()
-                    }
-                }
+            }
+        }
 
-            MessageListPage {
-                id: messageList
-                visible: false
-                model: imapAccess.msgListModel ? imapAccess.msgListModel : undefined
-                onMessageSelected: {
-                    imapAccess.openMessage(mailboxList.currentMailboxLong, uid)
-                    pageStack.push(Qt.resolvedUrl("OneMessagePage.qml"),
+        MessageListPage {
+            id: messageList
+            visible: false
+            model: imapAccess.msgListModel ? imapAccess.msgListModel : undefined
+            onMessageSelected: {
+                imapAccess.openMessage(mailboxList.currentMailboxLong, uid)
+                pageStack.push(Qt.resolvedUrl("OneMessagePage.qml"),
                                {
                                    mailbox: mailboxList.currentMailboxLong,
                                    url: imapAccess.oneMessageModel.mainPartUrl
                                }
                                )
-                }
             }
+        }
 
-    //extra dialogs and popups
-            Page {
-                id: encryptionMethodPage
-                title: qsTr("Secure connection")
-                visible: false
-                ListView {
-                    id:dialogView
-                    width: parent.width
-                    height: parent.height
-                    model: PortModel{}
-                    delegate: ListItems.Subtitled{
-                        id: itmDel
-                        text: name
-                        subText: port
-                        MouseArea{
-                            anchors.fill: parent
-                            onClicked: {
-                                imapPortInput.text = port
-                                pageStack.pop()
-                            }
+        //extra dialogs and popups
+        Page {
+            id: encryptionMethodPage
+            title: qsTr("Secure connection")
+            visible: false
+            ListView {
+                id:dialogView
+                width: parent.width
+                height: parent.height
+                model: PortModel{}
+                delegate: ListItems.Subtitled{
+                    id: itmDel
+                    text: name
+                    subText: port
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            imapPortInput.text = port
+                            pageStack.pop()
                         }
                     }
                 }
             }
+        }
 
-            CommonServerPage{
-             id: commonServerPage
-             visible: false
-            }
+        CommonServerPage{
+            id: commonServerPage
+            visible: false
+        }
 
-}
+    }
 }
