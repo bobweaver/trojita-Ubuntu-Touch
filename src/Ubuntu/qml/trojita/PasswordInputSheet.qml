@@ -53,6 +53,7 @@ Item {
         }
         Label {
             id: authFailedMessage
+            onTextChanged: PopupUtils.open(authErrorPopup)
             anchors {
                 left: parent.left;
                 right: parent.right;
@@ -60,7 +61,6 @@ Item {
                 leftMargin: 16;
                 rightMargin: 16
             }
-            wrapMode: Text.Wrap
         }
 Row {
     spacing: 12
@@ -80,5 +80,37 @@ Row {
         }
         }
    }
+    }
+    Component{
+        id: authErrorPopup
+        Dialog{
+            id: authErrorDialog
+            title: authFailureReason
+            text:  authErrorMessage
+
+
+            Column{
+            spacing: units.gu(1)
+            Button{
+                id:closePopUp
+             width: parent.width
+                text: "try again"
+                onClicked: {
+                    // TODO FLUSH cache and what not and try to login again
+                    PopupUtils.close(authErrorDialog)
+                }
+            }
+            Button{
+             id: filebugButton
+             width: parent.width
+             text: qsTr("File bug")
+            onClicked: {
+              PopupUtils.close(authErrorDialog)
+             // TODO MAKE A pagestack that returns the bug tracker
+                Qt.openUrlExternally("https://bugs.kde.org/enter_bug.cgi?product=trojita&format=guided")
+            }
+            }
+            }
+        }
     }
 }

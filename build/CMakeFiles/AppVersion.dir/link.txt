@@ -1,2 +1,0 @@
-/usr/bin/ar cr libAppVersion.a  CMakeFiles/AppVersion.dir/src/AppVersion/SetCoreApplication.cpp.o CMakeFiles/AppVersion.dir/AppVersion_automoc.cpp.o
-/usr/bin/ranlib libAppVersion.a

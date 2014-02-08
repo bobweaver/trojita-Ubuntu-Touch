@@ -23,7 +23,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
-
+import Ubuntu.Components.ListItems 0.1 as ListItems
 MainView{
     id: appWindow
     objectName: "appWindow"
@@ -36,7 +36,7 @@ MainView{
     property bool networkOffline: true
     property Item fwdOnePage: null
     function showConnectionError(message) {
-        pageStack.clear(passwordDialogComponent)
+        pageStack.pop()
         connectionErrorBanner.text = message
         connectionErrorBanner.parent = pageStack.currentPage
         connectionErrorBanner.show()
@@ -81,19 +81,57 @@ MainView{
 
     PageStack{
         id:pageStack
-        Component.onCompleted: pageStack.push(sslSheetPage)
-            MailboxListPage {
+        Component.onCompleted: pageStack.push(imapSettings)
+
+        // Get the Users name and details
+        ImapSettings {
+            id: imapSettings
+            anchors.fill: parent
+            visible: false
+        }
+
+        // Get the users password if Not Enter in Correctly
+        Page{
+            id:passwordDialogPage
+            visible: false
+            title: qsTr("Passwords")
+            PasswordInputSheet {
+                id: passwordDialog
+                onConfirmClicked:  imapAccess.imapModel.imapPassword = password
+                onCancelClicked:{
+                    imapAccess.imapModel.imapPassword = undefined
+                    pageStack.push(imapSettings)
+                }
+                }
+        }
+//        FIXME Qt5NamWebView or a new QNetworkRequest
+//        If the users is using SSL  then push this page
+        Page{
+            id: sslSheetPage
+            visible: false
+            title:  imapAccess.sslInfoTitle
+            SslSheet {
+                id: sslSheet
+                htmlText: imapAccess.sslInfoMessage
+                onConfirmClicked: imapAccess.setSslPolicy(true)
+                onCancelClicked:  imapAccess.setSslPolicy(false)
+            }
+        }
+//        Acess Granted show MailBox Lists
+        MailboxListPage {
                 id: mailboxList
                 visible: false
                 model: imapAccess.mailboxModel ? imapAccess.mailboxModel : null
                 onMailboxSelected: {
                     imapAccess.msgListModel.setMailbox(mailbox)
                     messageList.scrollToBottom()
-                    pageStack.push(messageListPage)
+                    pageStack.push(messageList)
                 }
                 // Looks like this gotta be in this file. If moved to the MailboxListPage.qml,
                 // QML engine complains about a binding loop.
                 // WTF?
+
+                //???? we should add a item to a loader here with some binding ?
                 property bool indexValid: mailboxList.model ? mailboxList.model.itemsValid : true
                 onIndexValidChanged:{
                     if (indexValid !== true)
@@ -116,82 +154,35 @@ MainView{
                 }
             }
 
-        Page{
-            id:serverSettingsPage
-            visible: false
-            title: qsTr("Server Settings")
-            Item{
-                id: serverSettings
-                anchors.fill: parent
-                ImapSettings {
-                    id: imapSettings
-                    anchors.fill: parent
-                    imapSslModelIndex: 0
-                }
-                Component.onCompleted: {
-                    imapSettings.imapServer = imapAccess.server
-                    if (imapAccess.port > 0)
-                        imapSettings.imapPort = imapAccess.port
-                        imapSettings.imapUserName = imapAccess.username
-                    // That's right, we do not load the password
-                    if (imapAccess.sslMode === "StartTLS")
-                        imapSettings.imapSslModeIndex = 2
-                    else if (imapAccess.sslMode === "SSL")
-                        imapSettings.imapSslModelIndex = 1
-                    else
-                        imapSettings.imapSslModelIndex = 0
-                }
-                Button{
-                    id: accessButton
-                    text: qsTr("OK")
-                    anchors{
-                        horizontalCenter: parent.horizontalCenter
-                        bottom:parent.bottom
-                    }
-                    onClicked: {
-                        if (imapAccess.imapModel) {
-                        // prevent assert failure in
-                        // ImapAccess::doConnect due to duplicate calls
-                       return ;
+    //extra dialogs and popups
+            Page {
+                id: encryptionMethodPage
+                title: qsTr("Secure connection")
+                visible: false
+                ListView {
+                    id:dialogView
+                    width: parent.width
+                    height: parent.height
+                    model: PortModel{}
+                    delegate: ListItems.Subtitled{
+                        id: itmDel
+                        text: name
+                        subText: port
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                imapPortInput.text = port
+                                pageStack.pop()
+                            }
                         }
-                        if (imapSettings.imapServer !== imapAccess.server || imapSettings.imapUserName !== imapAccess.username)
-                            imapAccess.nukeCache()
-                        if (imapSettings.imapServer != imapAccess.server)
-                            imapAccess.forgetSslCertificate()
-                        imapAccess.server = imapSettings.imapServer
-                        imapAccess.port = imapSettings.imapPort
-                        imapAccess.username = imapSettings.imapUserName
-                        if (imapSettings.imapPassword.length)
-                            imapAccess.password = imapSettings.imapPassword
-                        imapAccess.sslMode = imapSettings.imapSslMode
-                        imapAccess.doConnect()
-                        appWindow.connectModels()
                     }
                 }
             }
-        }
 
-        Page{
-            id:passwordDialogPage
-            visible: false
-            title: qsTr("Passwords")
-            PasswordInputSheet {
-                id: passwordDialog
-                onConfirmClicked:  imapAccess.imapModel.imapPassword = password
-                onCancelClicked:   imapAccess.imapModel.imapPassword = undefined
+            CommonServerPage{
+             id: commonServerPage
+             visible: false
             }
-        }
 
-        Page{
-            id: sslSheetPage
-            visible: false
-            title: imapAccess.sslInfoTitle
-            SslSheet {
-                id: sslSheet
-                htmlText: imapAccess.sslInfoMessage
-                onConfirmClicked: imapAccess.setSslPolicy(true)
-                onCancelClicked:  imapAccess.setSslPolicy(false)
-            }
-        }
-    }
+}
 }

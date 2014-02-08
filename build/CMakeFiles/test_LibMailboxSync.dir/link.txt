@@ -1,2 +1,0 @@
-/usr/bin/ar cr libtest_LibMailboxSync.a  CMakeFiles/test_LibMailboxSync.dir/tests/Utils/ModelEvents.cpp.o CMakeFiles/test_LibMailboxSync.dir/tests/Utils/LibMailboxSync.cpp.o CMakeFiles/test_LibMailboxSync.dir/test_LibMailboxSync_automoc.cpp.o
-/usr/bin/ranlib libtest_LibMailboxSync.a

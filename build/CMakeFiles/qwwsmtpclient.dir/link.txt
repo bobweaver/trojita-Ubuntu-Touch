@@ -1,2 +1,0 @@
-/usr/bin/ar cr libqwwsmtpclient.a  CMakeFiles/qwwsmtpclient.dir/src/qwwsmtpclient/qwwsmtpclient.cpp.o CMakeFiles/qwwsmtpclient.dir/qwwsmtpclient_automoc.cpp.o
-/usr/bin/ranlib libqwwsmtpclient.a

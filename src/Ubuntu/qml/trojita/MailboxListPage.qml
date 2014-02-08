@@ -26,8 +26,8 @@ import Ubuntu.Components.ListItems 0.1 as ListItems
 
 Page {
     id: mailboxPage
-    width: parent.width
-    height: parent.height
+//    width: parent.width
+//    height: parent.height
     title: qsTr("MailBox")
     visible:  false
     signal mailboxSelected(string mailbox)
@@ -44,7 +44,6 @@ Page {
         currentMailboxLong = imapAccess.mailboxListMailboxName()
 
     }
-
     function isNestedSomewhere() {
         return nestingDepth > 0
     }
@@ -52,15 +51,12 @@ Page {
         ListView {
             id: view
             model: imapAccess.mailboxModel
-            width: appWindow.width
-            height: appWindow.height
-            delegate: ListItems.Standard{
+            width: parent.width
+            height: parent.height
+            delegate: ListItems.Subtitled{
                 id: titleText
-                text:{
-                        totalMessageCount + " total, "
-                     + unreadMessageCount + " unread"
-                }
-//                    view.count //totalMessageCount === 0 ? "fobar no 0 " : TotalMessageCount
+                text: shortMailboxName
+                subText: totalMessageCount + " total, " + unreadMessageCount + " unread"
             onClicked: {
                     view.positionViewAtIndex(model.index, ListView.Visible);
                     if (mailboxIsSelectable) {
@@ -70,68 +66,6 @@ Page {
                     }
             }
             }
-//                Item {
-//                anchors {
-//                    top: parent.top;
-//                    bottom: parent.bottom;
-//                    left: parent.left;
-//                    right: parent.right
-////                    right: moreIndicator.visible ? moreIndicator.left : parent.right
-//                    leftMargin: 6
-//                    rightMargin: 16
-//                }
-//                MouseArea {
-//                    anchors.fill: parent
-//                    onClicked: {
-//                        view.positionViewAtIndex(model.index, ListView.Visible);
-//                        if (mailboxIsSelectable) {
-//                            currentMailbox = shortMailboxName
-//                            currentMailboxLong = mailboxName
-//                            mailboxSelected(mailboxName)
-//                        }
-//                    }
-//                }
-//                Label {
-//                    id: titleText
-//                    text: shortMailboxName
-//                }
-//                Label {
-//                    id: messageCountsText
-//                    anchors.top: titleText.bottom
-////                    visible:
-////                        mailboxIsSelectable
-////                        && totalMessageCount !== undefined
-//                    text: totalMessageCount === 0 ?
-//                              "No messages" :
-//                              (model.totalMessageCount + " total, " + model.unreadMessageCount + " unread")
-//                }
-//                Label {
-//                    anchors.top: titleText.bottom
-////                    visible: mailboxIsSelectable && totalMessageCount === undefined
-//                    text: qsTr("Loading...")
-//                }
-
-
-//            Rectangle {
-//                id: moreIndicator
-////                visible: mailboxHasChildMailboxes
-//                anchors {
-//                    verticalCenter: parent.verticalCenter;
-//                    right: parent.right
-//                }
-//                MouseArea {
-//                    anchors.fill: parent
-//                    onClicked: {
-//                        view.positionViewAtIndex(model.index, ListView.Visible);
-//                        currentMailbox = shortMailboxName
-//                        currentMailboxLong = mailboxName
-//                        moveListViewLeft.start()
-//                        root.model.setRootItemByOffset(model.index)
-//                        ++nestingDepth
-//                    }
-//                }
-//            }
-//        }
         }
         Scrollbar {
             flickableItem: view

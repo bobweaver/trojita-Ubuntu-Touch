@@ -775,7 +775,9 @@ include_directories(
         ${trojita_ubuntu_path}/qml/trojita/main.qml
         ${trojita_ubuntu_path}/qml/trojita/MessageListPage.qml
         ${trojita_ubuntu_path}/qml/trojita/Utils.js
-        )
+        ${trojita_ubuntu_path}/qml/trojita/CommonServerPage.qml
+        ${trojita_ubuntu_path}/qml/trojita/CommonServerModel.qml
+    )
     #make QML visable to QtCreator
     add_custom_target(
         components_QmlFiles

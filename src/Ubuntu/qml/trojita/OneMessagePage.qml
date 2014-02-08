@@ -22,34 +22,46 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Qt5NAMWebView 1.0
+import QtWebKit 3.0
 import "Utils.js" as Utils
 
 Page {
     id: oneMessagePage
-    tools: oneMailTools
     title: imapAccess.oneMessageModel.subject
+    tools:  ToolbarItems {
+        id: oneMailTools
+        visible: true
+        ToolbarButton {
+            id: messageReadButton
+//            toggled: imapAccess.oneMessageModel.isMarkedRead
+//            iconSource: "image://theme/icon-m-toolbar-done-white" + (toggled ? "-selected" : "")
+            onTriggered:  imapAccess.oneMessageModel.isMarkedRead = !imapAccess.oneMessageModel.isMarkedRead
+        }
+
+        ToolbarButton {
+            id: messageDeleteButton
+//            toggled: imapAccess.oneMessageModel.isMarkedDeleted
+//            iconSource: "image://theme/icon-m-toolbar-delete-white" + (toggled ? "-selected" : "")
+            onTriggered:  imapAccess.oneMessageModel.isMarkedDeleted = !imapAccess.oneMessageModel.isMarkedDeleted
+        }
+        NetworkPolicyButton {}
+    }
 
     property string mailbox
-    property alias url: messageView.url
+//    property alias url: messageView.url
     function handleChangedEnvelope() {
         if (status === PageStatus.Active && !imapAccess.oneMessageModel.hasValidIndex)
             appWindow.showHome()
     }
 
     Item {
-        anchors {
-            left: parent.left;
-            right: parent.right;
-            bottom: parent.bottom;
-            top: oneMessagePage.header.bottom
-        }
+        width: parent.width
+        height: parent.height
         Flickable {
             id: view
             anchors.fill: parent
             contentHeight: col.height
             contentWidth: col.width
-
             Column {
                 id: col
                 AddressWidget {
@@ -82,29 +94,35 @@ Page {
                 Label {
                     id: subjectLabel
                     width: view.width
-                    wrapMode: Text.Wrap
+                    wrapMode: Text.WordWrap
                     text: qsTr("<b>Subject:</b> ") + imapAccess.oneMessageModel.subject
                 }
 
-                Qt5NAMWebViewer {
-                    id: messageView
-                    networkAccessManager: imapAccess.msgQNAM
-                    preferredWidth: view.width
-                    // Without specifying the width here, plaintext e-mails would cause useless horizontal scrolling
-                    width: parent.width
+                Label{
+                    id: messageLabel
+                    width: view.width
+                    wrapMode: Text.WordWrap
+                    text: qsTr("<b>Message ? :</b> ") + imapAccess.msgQNAM
+                }
 
+//                WebView{
+//                    id: messageView
+//                    networkAccessManager: imapAccess.msgQNAM
+//                    preferredWidth: view.width
+                    // Without specifying the width here, plaintext e-mails would cause useless horizontal scrolling
+//                    width: parent.width
+//                      height:parent.height
                     // Setting the URL from here would not be enough, we really want to force a reload whenever the message changes,
                     // even though the URL might remain the same
 
-                    settings.userStyleSheetUrl: "data:text/css;charset=utf-8;base64," +
-                                                Qt.btoa("* {color: white; background: black; font-size: " +
-                                                        UiConstants.BodyTextFont.pixelSize + "px;};")
-                }
+//                    settings.userStyleSheetUrl: "data:text/css;charset=utf-8;base64," +
+//                                                Qt.btoa("* {color: white; background: black; font-size: " +
+//                                                        UiConstants.BodyTextFont.pixelSize + "px;};")
+//                }
 
                 // FIXME: move this to a dedicated page...
                 Component {
                     id: attachmentItemDelegate
-
                     Label {
                         id: lbl
                         text: "Attachment " + (model.fileName.length ? model.fileName + " " : "") + "(" + model.mimeType +
@@ -132,26 +150,6 @@ Page {
         Scrollbar{
             flickableItem: view
         }
-    }
-
-    ToolbarItems {
-        id: oneMailTools
-        visible: true
-        ToggleableToolIcon {
-            id: messageReadButton
-            toggled: imapAccess.oneMessageModel.isMarkedRead
-            iconSource: "image://theme/icon-m-toolbar-done-white" + (toggled ? "-selected" : "")
-            onClicked: imapAccess.oneMessageModel.isMarkedRead = !imapAccess.oneMessageModel.isMarkedRead
-        }
-
-        ToggleableToolIcon {
-            id: messageDeleteButton
-            toggled: imapAccess.oneMessageModel.isMarkedDeleted
-            iconSource: "image://theme/icon-m-toolbar-delete-white" + (toggled ? "-selected" : "")
-            onClicked: imapAccess.oneMessageModel.isMarkedDeleted = !imapAccess.oneMessageModel.isMarkedDeleted
-        }
-
-        NetworkPolicyButton {}
     }
 
     Component.onCompleted: imapAccess.oneMessageModel.envelopeChanged.connect(handleChangedEnvelope)

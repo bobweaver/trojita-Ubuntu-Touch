@@ -1,2 +1,0 @@
-/usr/bin/ar cr libMSA.a  CMakeFiles/MSA.dir/src/MSA/AbstractMSA.cpp.o CMakeFiles/MSA.dir/src/MSA/FakeMSA.cpp.o CMakeFiles/MSA.dir/src/MSA/ImapSubmit.cpp.o CMakeFiles/MSA.dir/src/MSA/SMTP.cpp.o CMakeFiles/MSA.dir/src/MSA/Sendmail.cpp.o CMakeFiles/MSA.dir/MSA_automoc.cpp.o
-/usr/bin/ranlib libMSA.a
