@@ -22,136 +22,118 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItems
 
 Page {
-    width: units.gu(80) / 2
-    height: units.gu(140) / 2
+    id: mailboxPage
+    width: parent.width
+    height: parent.height
+    title: qsTr("MailBox")
+    visible:  false
     signal mailboxSelected(string mailbox)
     property int nestingDepth: 0
     property string viewTitle: isNestedSomewhere() ? currentMailbox : imapAccess.server
     property string currentMailbox
     property string currentMailboxLong
     property QtObject model
-    title: viewTitle
     function openParentMailbox() {
         moveListViewRight.start()
         model.setRootOneLevelUp()
         --nestingDepth
         currentMailbox = imapAccess.mailboxListShortMailboxName()
         currentMailboxLong = imapAccess.mailboxListMailboxName()
+
     }
 
     function isNestedSomewhere() {
         return nestingDepth > 0
     }
 
-    id: root
-    tools: ToolbarItems{
-             id: commonTools
-             NetworkPolicyButton {}
-         }
-
-    Component {
-        id: mailboxItemDelegate
-        Item {
-            width: parent.width
-            height: 220  //UiConstants.ListItemHeightDefault
-//            anchors.margins: 12 //UiConstants.DefaultMargin
-            Item {
-                anchors {
-                    top: parent.top; bottom: parent.bottom; left: parent.left;
-                    right: moreIndicator.visible ? moreIndicator.left : parent.right
-                    leftMargin: 6
-                    rightMargin: 16
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        view.positionViewAtIndex(model.index, ListView.Visible);
-                        if (mailboxIsSelectable) {
-                            currentMailbox = shortMailboxName
-                            currentMailboxLong = mailboxName
-                            mailboxSelected(mailboxName)
-                        }
-                    }
-                }
-                Label {
-                    id: titleText
-                    text: shortMailboxName
-                }
-                Label {
-                    id: messageCountsText
-                    anchors.top: titleText.bottom
-                    visible: mailboxIsSelectable && totalMessageCount !== undefined
-                    text: totalMessageCount === 0 ?
-                              "No messages" :
-                              (totalMessageCount + " total, " + unreadMessageCount + " unread")
-                }
-                Label {
-                    anchors.top: titleText.bottom
-//                    font: UiConstants.SubtitleFont
-//                    visible: mailboxIsSelectable && totalMessageCount === undefined
-                    text: qsTr("Loading...")
-                }
-            }
-
-            Rectangle {
-                id: moreIndicator
-//                visible: mailboxHasChildMailboxes
-                anchors {verticalCenter: parent.verticalCenter; right: parent.right}
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        view.positionViewAtIndex(model.index, ListView.Visible);
-                        currentMailbox = shortMailboxName
-                        currentMailboxLong = mailboxName
-                        moveListViewLeft.start()
-                        root.model.setRootItemByOffset(model.index)
-                        ++nestingDepth
-                    }
-                }
-            }
-        }
-    }
-
-    Item {
-        id: contentView
-        anchors.fill: parent
-
         ListView {
             id: view
-            anchors {
-                top: header.bottom; left: parent.left; right: parent.right; bottom: parent.bottom
+            model: imapAccess.mailboxModel
+            width: appWindow.width
+            height: appWindow.height
+            delegate: ListItems.Standard{
+                id: titleText
+                text:{
+                        totalMessageCount + " total, "
+                     + unreadMessageCount + " unread"
+                }
+//                    view.count //totalMessageCount === 0 ? "fobar no 0 " : TotalMessageCount
+            onClicked: {
+                    view.positionViewAtIndex(model.index, ListView.Visible);
+                    if (mailboxIsSelectable) {
+                        currentMailbox = shortMailboxName
+                        currentMailboxLong = mailboxName
+                        mailboxSelected(mailboxName)
+                    }
             }
-            focus: true
-            delegate: mailboxItemDelegate
-            model: root.model
-        }
+            }
+//                Item {
+//                anchors {
+//                    top: parent.top;
+//                    bottom: parent.bottom;
+//                    left: parent.left;
+//                    right: parent.right
+////                    right: moreIndicator.visible ? moreIndicator.left : parent.right
+//                    leftMargin: 6
+//                    rightMargin: 16
+//                }
+//                MouseArea {
+//                    anchors.fill: parent
+//                    onClicked: {
+//                        view.positionViewAtIndex(model.index, ListView.Visible);
+//                        if (mailboxIsSelectable) {
+//                            currentMailbox = shortMailboxName
+//                            currentMailboxLong = mailboxName
+//                            mailboxSelected(mailboxName)
+//                        }
+//                    }
+//                }
+//                Label {
+//                    id: titleText
+//                    text: shortMailboxName
+//                }
+//                Label {
+//                    id: messageCountsText
+//                    anchors.top: titleText.bottom
+////                    visible:
+////                        mailboxIsSelectable
+////                        && totalMessageCount !== undefined
+//                    text: totalMessageCount === 0 ?
+//                              "No messages" :
+//                              (model.totalMessageCount + " total, " + model.unreadMessageCount + " unread")
+//                }
+//                Label {
+//                    anchors.top: titleText.bottom
+////                    visible: mailboxIsSelectable && totalMessageCount === undefined
+//                    text: qsTr("Loading...")
+//                }
 
+
+//            Rectangle {
+//                id: moreIndicator
+////                visible: mailboxHasChildMailboxes
+//                anchors {
+//                    verticalCenter: parent.verticalCenter;
+//                    right: parent.right
+//                }
+//                MouseArea {
+//                    anchors.fill: parent
+//                    onClicked: {
+//                        view.positionViewAtIndex(model.index, ListView.Visible);
+//                        currentMailbox = shortMailboxName
+//                        currentMailboxLong = mailboxName
+//                        moveListViewLeft.start()
+//                        root.model.setRootItemByOffset(model.index)
+//                        ++nestingDepth
+//                    }
+//                }
+//            }
+//        }
+        }
         Scrollbar {
             flickableItem: view
         }
     }
-
-    // FIXME: can we use shaders for these?
-    SequentialAnimation {
-        id: moveListViewLeft
-        property int oneStepDuration: 100
-        ScriptAction { script: contentView.anchors.fill = undefined }
-        PropertyAnimation { target: contentView; properties: "x"; to: -contentView.width; duration: moveListViewLeft.oneStepDuration }
-        PropertyAction { target: contentView; property: "x"; value: contentView.width }
-        PropertyAnimation { target: contentView; properties: "x"; to: 0; duration: moveListViewLeft.oneStepDuration }
-        ScriptAction { script: contentView.anchors.fill = contentView.parent }
-    }
-
-    SequentialAnimation {
-        id: moveListViewRight
-        property alias oneStepDuration: moveListViewLeft.oneStepDuration
-        ScriptAction { script: contentView.anchors.fill = undefined }
-        PropertyAnimation { target: contentView; properties: "x"; to: contentView.width; duration: moveListViewRight.oneStepDuration }
-        PropertyAction { target: contentView; property: "x"; value: -contentView.width }
-        PropertyAnimation { target: contentView; properties: "x"; to: 0; duration: moveListViewRight.oneStepDuration }
-        ScriptAction { script: contentView.anchors.fill = contentView.parent }
-    }
-}

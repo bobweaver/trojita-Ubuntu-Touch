@@ -1,0 +1,2 @@
+/usr/bin/ar cr libCommon.a  CMakeFiles/Common.dir/src/Common/Application.cpp.o CMakeFiles/Common.dir/src/Common/ConnectionId.cpp.o CMakeFiles/Common.dir/src/Common/DeleteAfter.cpp.o CMakeFiles/Common.dir/src/Common/FileLogger.cpp.o CMakeFiles/Common.dir/src/Common/MetaTypes.cpp.o CMakeFiles/Common.dir/src/Common/Paths.cpp.o CMakeFiles/Common.dir/src/Common/SettingsNames.cpp.o CMakeFiles/Common.dir/Common_automoc.cpp.o
+/usr/bin/ranlib libCommon.a

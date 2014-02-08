@@ -534,9 +534,16 @@ set(trojitaUbuntu_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/qtquick2applicationviewer/qtquick2applicationviewer.cpp
 )
 set(libQt5NAMWebView_SOURCES
- 	${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/plugin.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/plugin.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/plugin.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/qdeclarativewebview.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/qdeclarativewebview_p.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/Qt5NAMWebView/qmldir
 )
+#    add_custom_target(
+#        components_libQt5NAMWebView_SOURCES
+#        ALL SOURCES ${libQt5NAMWebView_SOURCES}
+#    )
 
 if(LinguistForTrojita_FOUND OR Qt5LinguistForTrojita_FOUND)
     file(GLOB_RECURSE lang_PO "${CMAKE_CURRENT_SOURCE_DIR}/po/trojita_common_*.po")
@@ -676,7 +683,7 @@ if(WITH_DESKTOP)
     target_link_libraries(be.contacts AbookAddressbook ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 
 elseif(WITH_HARMATTAN)
-    add_library(trojitaqnamwebviewplugin SHARED ${libQNAMWebView_SOURCES})
+    add_library(qt5namwebview SHARED ${libQNAMWebView_SOURCES})
     add_executable(trojita-tp ${trojitaHarmattan_SOURCES})
     if(SUPPORTS_TARGET_INCLUDES)
         set_property(TARGET trojita-tp APPEND PROPERTY INCLUDE_DIRECTORIES
@@ -689,13 +696,13 @@ endif()
 
 #// add the Ubuntu Libs Here ALSO
 if(WITH_UBUNTU)
-    add_library(trojitaqnamwebviewplugin SHARED ${libQt5NAMWebView_SOURCES})
+    add_library(qt5namwebview SHARED ${libQt5NAMWebView_SOURCES})
     add_executable(trojita-tp ${trojitaUbuntu_SOURCES})
     if(SUPPORTS_TARGET_INCLUDES)
         set_property(TARGET trojita-tp APPEND PROPERTY INCLUDE_DIRECTORIES
             ${QT_MKSPECS_DIR}/default ${CMAKE_CURRENT_SOURCE_DIR}/src/Ubuntu/qtquick2applicationviewer)
     endif()
-target_link_libraries(trojita-tp trojitaqnamwebviewplugin AppVersion Imap MSA Streams qwwsmtpclient Common Composer
+target_link_libraries(trojita-tp qt5namwebview AppVersion Imap MSA Streams qwwsmtpclient Common Composer
     ${QT5CORE_LIBRARY}
     ${QT5WIDGETS_LIBRARY}
     ${QT5SQL_LIBRARY}
@@ -729,10 +736,8 @@ elseif(WITH_UBUNTU AND WITH_QT5)
     qt5_use_modules(MSA Network)
     qt5_use_modules(Composer Gui Network)
     qt5_use_modules(Imap Gui Network Sql)
-#    qt5_use_modules(AbookAddressbook Widgets)
-#    qt5_use_modules(be.contacts Widgets)
     qt5_use_modules(trojita-tp Widgets Network Core Qml Quick)
-    qt5_use_modules(trojitaqnamwebviewplugin Widgets Core Qml Quick WebKit Network Gui WebKitWidgets)
+    qt5_use_modules(qt5namwebview Widgets Core Qml Quick WebKit Network Gui WebKitWidgets)
 
 endif()
 if(WITH_SHARED_PLUGINS)
@@ -757,25 +762,25 @@ include_directories(
 )
 #FIXME SEE if Upstream wants to make subdir cmake for whole project ?
     set(UBUNTU_QMLS
+        ${trojita_ubuntu_path}/qml/trojita/PortModel.qml
         ${trojita_ubuntu_path}/qml/trojita/AddressWidget.qml
         ${trojita_ubuntu_path}/qml/trojita/NetworkPolicyButton.qml
-        ${trojita_ubuntu_path}/qml/trojita/BackButton.qml
         ${trojita_ubuntu_path}/qml/trojita/OneMessagePage.qml
         ${trojita_ubuntu_path}/qml/trojita/icon-m-settings-keychain.svg
-        ${trojita_ubuntu_path}/qml/trojita/PageHeader.qml
         ${trojita_ubuntu_path}/qml/trojita/ImapSettings.qml
         ${trojita_ubuntu_path}/qml/trojita/PasswordInputSheet.qml
         ${trojita_ubuntu_path}/qml/trojita/MailboxListPage.qml
         ${trojita_ubuntu_path}/qml/trojita/PercentageSectionScroller.qml
-        ${trojita_ubuntu_path}/qml/trojita/MainPage.qml
         ${trojita_ubuntu_path}/qml/trojita/SslSheet.qml
         ${trojita_ubuntu_path}/qml/trojita/main.qml
-        ${trojita_ubuntu_path}/qml/trojita/ToggleableToolIcon.qml
         ${trojita_ubuntu_path}/qml/trojita/MessageListPage.qml
         ${trojita_ubuntu_path}/qml/trojita/Utils.js
         )
     #make QML visable to QtCreator
-    add_custom_target(components_QmlFiles ALL SOURCES ${UBUNTU_QMLS})
+    add_custom_target(
+        components_QmlFiles
+        ALL SOURCES ${UBUNTU_QMLS}
+    )
 
     install(
         FILES ${UBUNTU_QMLS}
@@ -786,7 +791,7 @@ include_directories(
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
     install(
-        TARGETS trojitaqnamwebviewplugin LIBRARY
+        TARGETS qt5namwebview LIBRARY
         DESTINATION ${QMLPLUGIN_INSTALL_PREFIX}/Qt5NAMWebView
     )
     install(
@@ -807,7 +812,7 @@ endif()
 if(WITH_HARMATTAN)
     set(trojita_harmattan_path ${CMAKE_CURRENT_SOURCE_DIR}/src/Harmattan)
     install(TARGETS trojita-tp RUNTIME DESTINATION bin)
-    install(TARGETS trojitaqnamwebviewplugin LIBRARY DESTINATION bin/net/flaska/QNAMWebView)
+    install(TARGETS qt5namwebview LIBRARY DESTINATION bin/net/flaska/QNAMWebView)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/QmlSupport/QNAMWebView/qmldir DESTINATION bin/net/flaska/QNAMWebView)
     install(DIRECTORY ${trojita_harmattan_path}/qml DESTINATION ${CMAKE_INSTALL_PREFIX})
     install(FILES ${trojita_harmattan_path}/trojita-tp.desktop DESTINATION share/applications)

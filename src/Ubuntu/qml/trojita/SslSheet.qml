@@ -23,65 +23,82 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
-import Qt5NAMWebView 1.0
+import QtWebKit 3.0
+ Item {
+    id: sslItem
+    anchors.fill: parent
+    property alias htmlText: htmlView.url
+//    property alias titleText: title.text
+    signal confirmClicked()
+    signal cancelClicked()
+    width: units.gu(80) / 2
+    height: units.gu(140) / 2
+//    Flickable {
+//        id: flick
+//        anchors.fill: parent
+//        contentWidth: htmlView.width
+//        contentHeight: htmlView.height + header.height
+//        Column {
+//            Item {
+//                id: header
+//                width: sslItem.width
+//                height: icon.height + icon.anchors.topMargin + icon.anchors.bottomMargin
+//                Image {
+//                    id: icon
+//                    anchors {
+//                        margins: 12
+//                        left: parent.left
+//                        verticalCenter: parent.verticalCenter
+//                    }
+//                    source: "icon-m-settings-keychain.svg"
+//                    width: 64
+//                    height: 64
+//                }
 
-ComposerSheet {
-    property alias htmlText: htmlView.html
-    property alias titleText: title.text
-   Item {
-        id: item
-        anchors.fill: parent
-        Flickable {
-            id: flick
-            anchors.fill: parent
-            contentWidth: htmlView.width
-            contentHeight: htmlView.height + header.height
-            Column {
-                Item {
-                    id: header
-                    width: item.width
-                    height: icon.height + icon.anchors.topMargin + icon.anchors.bottomMargin
-                    Image {
-                        id: icon
-                        anchors {
-                            margins: UiConstants.DefaultMargin
-                            left: parent.left
-                            verticalCenter: parent.verticalCenter
-                        }
-                        source: "icon-m-settings-keychain.svg"
-                        width: 64
-                        height: 64
-                    }
+//                Label {
+//                    id: title
+//                    text: "Blésmrt Trojitá"
+//                    anchors {
+//                        top: parent.top
+//                        bottom: parent.bottom
+//                        left: icon.right
+//                        right: parent.right
+//                    }
+//                    horizontalAlignment: Text.AlignHCenter
+//                    verticalAlignment: Text.AlignVCenter
 
-                    Label {
-                        id: title
-                        text: "Blésmrt Trojitá"
-                        anchors {
-                            margins: UiConstants.DefaultMargin
-                            top: parent.top
-                            bottom: parent.bottom
-                            left: icon.right
-                            right: parent.right
-                        }
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
+//                }
+//            }
+            WebView{
+                id: htmlView
+//                preferredWidth: sslItem.width
+                width: sslItem.width
+                height: sslItem.height
+//                settings.userStyleSheetUrl: "data:text/css;charset=utf-8;base64," +
+//                                            Qt.btoa("* {color: white; background: black; font-size:  12px; font-family: sans-serif;};")
+//            }
+//        }
+    }
 
-                    }
-                }
-
-                QNAMWebView {
-                    id: htmlView
-                    preferredWidth: item.width
-                    width: item.width
-                    preferredHeight: item.height
-                    settings.userStyleSheetUrl: "data:text/css;charset=utf-8;base64," +
-                                                Qt.btoa("* {color: white; background: black; font-size:  12px; font-family: sans-serif;};")
-                }
+    Scrollbar{
+        flickableItem: flick
+    }
+    Row{
+        anchors.bottom: parent.bottom
+        spacing: 1
+        Button{
+            id: okButton
+            text: "Confirm"
+            onClicked:{
+                sslItem.confirmClicked()
             }
         }
-
-        Scrollbar{
-            flickableItem: flick
+        Button{
+            id: cancelButton
+            text: "cancel"
+            onClicked:{
+                sslItem.cancelClicked()
+            }
         }
     }
 }

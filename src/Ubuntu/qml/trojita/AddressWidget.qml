@@ -23,14 +23,14 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import "Utils.js" as Utils
-
 Label {
     property string caption
     property variant address
-
     text: visible ?
-              "<b>" + caption + ":</b> " + Utils.formatMailAddresses(address) :
+              "<b>" + caption + ":</b> "
+              + Utils.formatMailAddresses(address)
+            :
               ""
-    wrapMode: Text.Wrap
+    wrapMode: Text.WordWrap
     visible: Utils.isMailAddressValid(address)
 }

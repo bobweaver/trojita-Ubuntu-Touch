@@ -24,12 +24,18 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 
-ComposerSheet {
-    property alias password: password.text
+Item {
+    id: passRoot
+    width: parent.width
+    height: parent.height
+    property string password: password.text
     property alias authErrorMessage: authFailedMessage.text
-   Column {
-        anchors.fill: parent
-        anchors.margins: UiConstants.DefaultMargin
+    signal confirmClicked()
+    signal cancelClicked()
+    Column {
+        width: parent.width
+        height: parent.height
+        anchors.centerIn: parent
         spacing: 10
         Label {
             id: authFailureReason
@@ -37,6 +43,7 @@ ComposerSheet {
         }
         Label {
             text: qsTr("Password")
+            fontSize: "large"
         }
         TextField {
             id: password
@@ -55,5 +62,23 @@ ComposerSheet {
             }
             wrapMode: Text.Wrap
         }
+Row {
+    spacing: 12
+    anchors.horizontalCenter: parent.horizontalCenter
+        Button{
+        id: okButton
+        text: "Confirm"
+        onClicked:{
+         passRoot.confirmClicked()
+        }
+        }
+        Button{
+        id: cancelButton
+        text: "Cancel"
+        onClicked:{
+         passRoot.cancelClicked()
+        }
+        }
+   }
     }
 }

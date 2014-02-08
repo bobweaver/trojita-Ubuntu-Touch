@@ -17,16 +17,14 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef TROJITA_QML_QNAMWEBKITPLUGIN
-#define TROJITA_QML_QNAMWEBKITPLUGIN
-
+#ifndef Qt5NAMWEBVIEWPLUGIN
+#define Qt5NAMWEBVIEWPLUGIN
 #include <QQmlExtensionPlugin>
 
-class TrojitaQNAMWebKitQmlPlugin : public QQmlExtensionPlugin {
+class Qt5NAMWebViewPlugin : public QQmlExtensionPlugin {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 public:
     virtual void registerTypes(const char* uri);
 };
-
-#endif
+#endif //Qt5NAMWEBVIEW

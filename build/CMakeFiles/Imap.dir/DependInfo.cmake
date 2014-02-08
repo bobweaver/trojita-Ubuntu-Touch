@@ -1,0 +1,117 @@
+# The set of languages for which implicit dependencies are needed:
+SET(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+SET(CMAKE_DEPENDS_CHECK_CXX
+  "/home/joseph/Templates/trojita/build/Imap_automoc.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/Imap_automoc.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/ConnectionState.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/ConnectionState.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Encoders.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Encoders.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Exceptions.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Exceptions.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/Cache.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/Cache.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/CombinedCache.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/CombinedCache.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/DiskPartCache.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/DiskPartCache.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/DragAndDrop.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/DragAndDrop.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/FindInterestingPart.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/FindInterestingPart.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/FlagsOperation.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/FlagsOperation.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/FullMessageCombiner.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/FullMessageCombiner.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/ImapAccess.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/ImapAccess.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/MailboxMetadata.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/MailboxMetadata.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/MailboxModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/MailboxModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/MailboxTree.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/MailboxTree.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/MemoryCache.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/MemoryCache.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/Model.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/Model.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/ModelWatcher.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/ModelWatcher.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/MsgListModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/MsgListModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/NetworkWatcher.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/NetworkWatcher.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/OneMessageModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/OneMessageModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/ParserState.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/ParserState.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/PrettyMailboxModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/PrettyMailboxModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/PrettyMsgListModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/PrettyMsgListModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/SQLCache.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/SQLCache.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/SpecialFlagNames.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/SpecialFlagNames.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/SubtreeModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/SubtreeModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/TaskFactory.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/TaskFactory.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/TaskPresentationModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/TaskPresentationModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/ThreadingMsgListModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/ThreadingMsgListModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/Utils.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/Utils.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/VisibleTasksModel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/VisibleTasksModel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Model/kdeui-itemviews/kdescendantsproxymodel.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Model/kdeui-itemviews/kdescendantsproxymodel.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Network/FileDownloadManager.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Network/FileDownloadManager.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Network/ForbiddenReply.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Network/ForbiddenReply.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Network/MsgPartNetAccessManager.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Network/MsgPartNetAccessManager.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Network/MsgPartNetworkReply.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Network/MsgPartNetworkReply.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/3rdparty/kcodecs.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/3rdparty/kcodecs.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/3rdparty/rfccodecs.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/3rdparty/rfccodecs.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Command.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Command.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Data.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Data.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/LowLevelParser.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/LowLevelParser.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/MailAddress.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/MailAddress.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Message.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Message.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Parser.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Parser.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Response.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Response.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Rfc5322HeaderParser.generated.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Rfc5322HeaderParser.generated.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/Sequence.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/Sequence.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Parser/ThreadingNode.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Parser/ThreadingNode.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/AppendTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/AppendTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/CopyMoveMessagesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/CopyMoveMessagesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/CreateMailboxTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/CreateMailboxTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/DeleteMailboxTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/DeleteMailboxTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/EnableTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/EnableTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ExpungeMailboxTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ExpungeMailboxTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ExpungeMessagesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ExpungeMessagesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/Fake_ListChildMailboxesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/Fake_ListChildMailboxesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/Fake_OpenConnectionTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/Fake_OpenConnectionTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/FetchMsgMetadataTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/FetchMsgMetadataTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/FetchMsgPartTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/FetchMsgPartTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/GenUrlAuthTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/GenUrlAuthTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/GetAnyConnectionTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/GetAnyConnectionTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/IdTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/IdTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/IdleLauncher.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/IdleLauncher.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ImapTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ImapTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/KeepMailboxOpenTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/KeepMailboxOpenTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ListChildMailboxesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ListChildMailboxesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/NoopTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/NoopTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/NumberOfMessagesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/NumberOfMessagesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ObtainSynchronizedMailboxTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ObtainSynchronizedMailboxTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/OfflineConnectionTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/OfflineConnectionTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/OpenConnectionTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/OpenConnectionTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/SortTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/SortTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/SubscribeUnsubscribeTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/SubscribeUnsubscribeTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/ThreadTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/ThreadTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/UidSubmitTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/UidSubmitTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/UnSelectTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/UnSelectTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/UpdateFlagsOfAllMessagesTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/UpdateFlagsOfAllMessagesTask.cpp.o"
+  "/home/joseph/Templates/trojita/src/Imap/Tasks/UpdateFlagsTask.cpp" "/home/joseph/Templates/trojita/build/CMakeFiles/Imap.dir/src/Imap/Tasks/UpdateFlagsTask.cpp.o"
+  )
+SET(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+SET(CMAKE_TARGET_DEFINITIONS
+  "QT_CORE_LIB"
+  "QT_GUI_LIB"
+  "QT_NETWORK_LIB"
+  "QT_SQL_LIB"
+  "QT_STRICT_ITERATORS"
+  )
+
+# Targets to which this target links.
+SET(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/joseph/Templates/trojita/build/CMakeFiles/Common.dir/DependInfo.cmake"
+  "/home/joseph/Templates/trojita/build/CMakeFiles/Streams.dir/DependInfo.cmake"
+  )
+
+# The include file search paths:
+SET(CMAKE_C_TARGET_INCLUDE_PATH
+  "../src"
+  "."
+  "/usr/include/qt5/QtGui"
+  "/usr/include/qt5/QtCore"
+  "/usr/include/qt5"
+  "/usr/lib/i386-linux-gnu/qt5/mkspecs/linux-g++"
+  "/usr/include/qt5/QtNetwork"
+  "/usr/include/qt5/QtSql"
+  )
+SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

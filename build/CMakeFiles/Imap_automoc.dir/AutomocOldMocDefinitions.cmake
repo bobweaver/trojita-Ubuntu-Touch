@@ -1,0 +1,1 @@
+set(AM_OLD_COMPILE_SETTINGS "QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SQL_LIB;QT_STRICT_ITERATORS ~~~ /home/joseph/Templates/trojita/src;/home/joseph/Templates/trojita/build;/usr/include/qt5/QtGui;/usr/include/qt5/QtCore;/usr/include/qt5;/usr/lib/i386-linux-gnu/qt5/mkspecs/linux-g++;/usr/include/qt5/QtNetwork;/usr/include/qt5/QtSql;/usr/include ~~~  ~~~ FALSE ~~~ ")

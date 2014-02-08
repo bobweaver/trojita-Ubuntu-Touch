@@ -19,7 +19,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+// REMOVE ME NOT NEEDED  FOR UBUNTU SDK as they make there page stacks have back buttons automaticly
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 

@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/joseph/Templates/trojita/src/QmlSupport/Qt5NAMWebView/plugin.cpp
+plugin.h
+/home/joseph/Templates/trojita/src/QmlSupport/Qt5NAMWebView/plugin.h
+qdeclarativewebview_p.h
+/home/joseph/Templates/trojita/src/QmlSupport/Qt5NAMWebView/qdeclarativewebview_p.h
+qqml.h
+-
+
+/home/joseph/Templates/trojita/src/QmlSupport/Qt5NAMWebView/plugin.h
+QQmlExtensionPlugin
+-
+
+/home/joseph/Templates/trojita/src/QmlSupport/Qt5NAMWebView/qdeclarativewebview_p.h
+QBasicTimer
+-
+QUrl
+-
+QQuickItem
+-
+QAction
+-
+QNetworkAccessManager
+-
+QtWebKitWidgets/QGraphicsWebView
+-
+QtWebKitWidgets/QWebPage
+-
+

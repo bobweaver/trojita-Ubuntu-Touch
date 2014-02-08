@@ -23,33 +23,36 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.Themes 0.1
-MainView {
+
+MainView{
     id: appWindow
     objectName: "appWindow"
     applicationName: "trojita"
     automaticOrientation: true
     anchorToKeyboard: true
-    width: units.gu(80) / 2
-    height: units.gu(140) / 2
+    width: units.gu(40)
+    height: units.gu(70)
+
     property bool networkOffline: true
     property Item fwdOnePage: null
     function showConnectionError(message) {
-        PopupUtils.close(passwordDialogComponent)
+        pageStack.clear(passwordDialogComponent)
         connectionErrorBanner.text = message
         connectionErrorBanner.parent = pageStack.currentPage
         connectionErrorBanner.show()
         networkOffline = true
     }
 
-    function showImapAlert(message) {
-        alertBanner.text = message
-        alertBanner.parent = pageStack.currentPage
-        alertBanner.show()
-    }
+//    change me to be correct notifcations via notify-send ?
+
+//    function showImapAlert(message) {
+//        alertBanner.text = message
+//        alertBanner.parent = pageStack.currentPage
+//        alertBanner.show()
+//    }
 
     function requestingPassword() {
-       PopupUtils.open(passwordDialogComponent)
+        pageStack.push(passwordDialogPage)
     }
 
     function authAttemptFailed(message) {
@@ -58,125 +61,137 @@ MainView {
 
     function connectModels() {
         imapAccess.imapModel.connectionError.connect(showConnectionError)
-        imapAccess.imapModel.alertReceived.connect(showImapAlert)
+//        imapAccess.imapModel.alertReceived.connect(showImapAlert)
         imapAccess.imapModel.authRequested.connect(requestingPassword)
         imapAccess.imapModel.authAttemptFailed.connect(authAttemptFailed)
         imapAccess.imapModel.networkPolicyOffline.connect(function() {networkOffline = true})
         imapAccess.imapModel.networkPolicyOnline.connect(function() {networkOffline = false})
         imapAccess.imapModel.networkPolicyExpensive.connect(function() {networkOffline = false})
-        imapAccess.checkSslPolicy.connect(function() {PopupUtils.open(sslSheetComponent)})
-    }
-
-    function goBack() {
-        if (pageStack.currentPage === mailboxListPage && mailboxListPage.isNestedSomewhere()) {
-            mailboxListPage.openParentMailbox()
-        } else {
-            pageStack.pop()
-        }
-    }
-
-    function backButtonEnabled() {
-        return (pageStack.currentPage === mailboxListPage && mailboxListPage.isNestedSomewhere()) || pageStack.depth > 1
+        imapAccess.checkSslPolicy.connect(function() {pageStack.push(sslSheetPage )})
     }
 
     function showHome() {
-        pageStack.pop(mailboxListPage)
-        mailboxListPage.nestingDepth = 0
-        mailboxListPage.currentMailbox = ""
-        mailboxListPage.currentMailboxLong = ""
-        if (mailboxListPage.model)
-            mailboxListPage.model.setOriginalRoot()
+        pageStack.push(mailboxList)
+        mailboxList.nestingDepth = 0
+        mailboxList.currentMailbox = ""
+        mailboxList.currentMailboxLong = ""
+        if (mailboxList.model)
+            mailboxList.model.setOriginalRoot()
     }
 
-    Component.onCompleted: {
-        PopupUtils.open(serverSettingsComponent)
-    }
-
-    MailboxListPage {
-        id: mailboxListPage
-        model: imapAccess.mailboxModel ? imapAccess.mailboxModel : null
-        onMailboxSelected: {
-            imapAccess.msgListModel.setMailbox(mailbox)
-            messageListPage.scrollToBottom()
-            pageStack.push(messageListPage)
-        }
-        // Looks like this gotta be in this file. If moved to the MailboxListPage.qml, QML engine complains about a binding loop.
-        // WTF?
-        property bool indexValid: model ? model.itemsValid : true
-        onIndexValidChanged: if (!indexValid) appWindow.showHome()
-    }
-
-    MessageListPage {
-        id: messageListPage
-        model: imapAccess.msgListModel ? imapAccess.msgListModel : undefined
-        onMessageSelected: {
-            imapAccess.openMessage(mailboxListPage.currentMailboxLong, uid)
-            pageStack.push(Qt.resolvedUrl("OneMessagePage.qml"),
-                           {
-                               mailbox: mailboxListPage.currentMailboxLong,
-                               url: imapAccess.oneMessageModel.mainPartUrl
-                           })
-        }
-    }
-
-    Component{
-        id:serverSettingsComponent
-        ComposerSheet{
-            id: serverSettings
-            ImapSettings {
-                id: imapSettings
-                anchors.fill: parent
-            }
-            Component.onCompleted: {
-                imapSettings.imapServer = imapAccess.server
-                if (imapAccess.port > 0)
-                    imapSettings.imapPort = imapAccess.port
-                    imapSettings.imapUserName = imapAccess.username
-                // That's right, we do not load the password
-                if (imapAccess.sslMode == "StartTLS")
-                    imapSettings.imapSslModeIndex = 2
-                else if (imapAccess.sslMode == "SSL")
-                    imapSettings.imapSslModeIndex = 1
-                else
-                    imapSettings.imapSslModeIndex = 0
-            }
-            onConfirmClicked: {
-                if (imapAccess.imapModel) {
-                    // prevent assert failure in ImapAccess::doConnect due to duplicate calls
-                    break;
+    PageStack{
+        id:pageStack
+        Component.onCompleted: pageStack.push(sslSheetPage)
+            MailboxListPage {
+                id: mailboxList
+                visible: false
+                model: imapAccess.mailboxModel ? imapAccess.mailboxModel : null
+                onMailboxSelected: {
+                    imapAccess.msgListModel.setMailbox(mailbox)
+                    messageList.scrollToBottom()
+                    pageStack.push(messageListPage)
                 }
-                if (imapSettings.imapServer !== imapAccess.server || imapSettings.imapUserName !== imapAccess.username)
-                    imapAccess.nukeCache()
-                if (imapSettings.imapServer != imapAccess.server)
-                       imapAccess.forgetSslCertificate()
-                      imapAccess.server = imapSettings.imapServer
-                     imapAccess.port = imapSettings.imapPort
-                    imapAccess.username = imapSettings.imapUserName
-                if (imapSettings.imapPassword.length)
-                    imapAccess.password = imapSettings.imapPassword
-                    imapAccess.sslMode = imapSettings.imapSslMode
-                    imapAccess.doConnect()
-                    connectModels()
+                // Looks like this gotta be in this file. If moved to the MailboxListPage.qml,
+                // QML engine complains about a binding loop.
+                // WTF?
+                property bool indexValid: mailboxList.model ? mailboxList.model.itemsValid : true
+                onIndexValidChanged:{
+                    if (indexValid !== true)
+                    return appWindow.showHome()
+                    }
+                }
+
+            MessageListPage {
+                id: messageList
+                visible: false
+                model: imapAccess.msgListModel ? imapAccess.msgListModel : undefined
+                onMessageSelected: {
+                    imapAccess.openMessage(mailboxList.currentMailboxLong, uid)
+                    pageStack.push(Qt.resolvedUrl("OneMessagePage.qml"),
+                               {
+                                   mailbox: mailboxList.currentMailboxLong,
+                                   url: imapAccess.oneMessageModel.mainPartUrl
+                               }
+                               )
+                }
+            }
+
+        Page{
+            id:serverSettingsPage
+            visible: false
+            title: qsTr("Server Settings")
+            Item{
+                id: serverSettings
+                anchors.fill: parent
+                ImapSettings {
+                    id: imapSettings
+                    anchors.fill: parent
+                    imapSslModelIndex: 0
+                }
+                Component.onCompleted: {
+                    imapSettings.imapServer = imapAccess.server
+                    if (imapAccess.port > 0)
+                        imapSettings.imapPort = imapAccess.port
+                        imapSettings.imapUserName = imapAccess.username
+                    // That's right, we do not load the password
+                    if (imapAccess.sslMode === "StartTLS")
+                        imapSettings.imapSslModeIndex = 2
+                    else if (imapAccess.sslMode === "SSL")
+                        imapSettings.imapSslModelIndex = 1
+                    else
+                        imapSettings.imapSslModelIndex = 0
+                }
+                Button{
+                    id: accessButton
+                    text: qsTr("OK")
+                    anchors{
+                        horizontalCenter: parent.horizontalCenter
+                        bottom:parent.bottom
+                    }
+                    onClicked: {
+                        if (imapAccess.imapModel) {
+                        // prevent assert failure in
+                        // ImapAccess::doConnect due to duplicate calls
+                       return ;
+                        }
+                        if (imapSettings.imapServer !== imapAccess.server || imapSettings.imapUserName !== imapAccess.username)
+                            imapAccess.nukeCache()
+                        if (imapSettings.imapServer != imapAccess.server)
+                            imapAccess.forgetSslCertificate()
+                        imapAccess.server = imapSettings.imapServer
+                        imapAccess.port = imapSettings.imapPort
+                        imapAccess.username = imapSettings.imapUserName
+                        if (imapSettings.imapPassword.length)
+                            imapAccess.password = imapSettings.imapPassword
+                        imapAccess.sslMode = imapSettings.imapSslMode
+                        imapAccess.doConnect()
+                        appWindow.connectModels()
+                    }
+                }
             }
         }
-    }
 
-    Component{
-        id:passwordDialogComponent
-        PasswordInputSheet {
-            id: passwordDialog
-            onConfirmClicked:  imapAccess.imapModel.imapPassword = password
-            onCancelClicked:  imapAccess.imapModel.imapPassword = undefined
+        Page{
+            id:passwordDialogPage
+            visible: false
+            title: qsTr("Passwords")
+            PasswordInputSheet {
+                id: passwordDialog
+                onConfirmClicked:  imapAccess.imapModel.imapPassword = password
+                onCancelClicked:   imapAccess.imapModel.imapPassword = undefined
+            }
         }
-    }
-    Component{
-        id: sslSheetComponent
-        SslSheet {
-            id: sslSheet
-            titleText: imapAccess.sslInfoTitle
-            htmlText: imapAccess.sslInfoMessage
-            onConfirmClicked: imapAccess.setSslPolicy(true)
-            onCancelClicked:  imapAccess.setSslPolicy(false)
+
+        Page{
+            id: sslSheetPage
+            visible: false
+            title: imapAccess.sslInfoTitle
+            SslSheet {
+                id: sslSheet
+                htmlText: imapAccess.sslInfoMessage
+                onConfirmClicked: imapAccess.setSslPolicy(true)
+                onCancelClicked:  imapAccess.setSslPolicy(false)
+            }
         }
     }
 }

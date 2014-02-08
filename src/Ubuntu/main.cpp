@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QtGui/QGuiApplication>
 #include <QQmlContext>
+#include<QDebug>
 #include <QSettings>
 #include "qtquick2applicationviewer/qtquick2applicationviewer.h"
 #include "AppVersion/SetCoreApplication.h"
@@ -38,6 +39,7 @@ static QString fullPath(const QString &fileName)
         result = QString(UBUNTU_INSTALL_DATADIR) + fileName;
     } else {
         result = QString(UBUNTU_DEV_DATADIR) + fileName;
+        qDebug() << result;
     }
     return result;
 }
@@ -48,17 +50,16 @@ int main(int argc, char *argv[])
     Common::Application::name = QString::fromLatin1("trojita-tp");
     AppVersion::setGitVersion();
     AppVersion::setCoreApplicationData();
-
     QtQuick2ApplicationViewer viewer;
 
     QSettings s;
     Imap::ImapAccess imapAccess(0, &s, QLatin1String("defaultAccount"));
     QQmlContext *ctxt = viewer.rootContext();
     ctxt->setContextProperty(QLatin1String("imapAccess"), &imapAccess);
-//FixME for QWindow
-//    viewer.setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
+    //FixME for QWindow
+    //    viewer.setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
+    viewer.setTitle("Trojita");
     viewer.setMainQmlFile(fullPath("/qml/trojita/main.qml"));
     viewer.showExpanded();
-
     return app.exec();
 }

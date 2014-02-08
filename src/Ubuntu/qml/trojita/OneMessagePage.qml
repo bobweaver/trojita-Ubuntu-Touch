@@ -26,21 +26,24 @@ import Qt5NAMWebView 1.0
 import "Utils.js" as Utils
 
 Page {
+    id: oneMessagePage
+    tools: oneMailTools
+    title: imapAccess.oneMessageModel.subject
+
     property string mailbox
     property alias url: messageView.url
-    title: imapAccess.oneMessageModel.subject
     function handleChangedEnvelope() {
         if (status === PageStatus.Active && !imapAccess.oneMessageModel.hasValidIndex)
             appWindow.showHome()
     }
 
-    id: oneMessagePage
-
-    tools: oneMailTools
-
     Item {
-        anchors {left: parent.left; right: parent.right; bottom: parent.bottom; top: header.bottom}
-
+        anchors {
+            left: parent.left;
+            right: parent.right;
+            bottom: parent.bottom;
+            top: oneMessagePage.header.bottom
+        }
         Flickable {
             id: view
             anchors.fill: parent
@@ -49,7 +52,6 @@ Page {
 
             Column {
                 id: col
-
                 AddressWidget {
                     caption: qsTr("From")
                     address: imapAccess.oneMessageModel.from
@@ -84,12 +86,10 @@ Page {
                     text: qsTr("<b>Subject:</b> ") + imapAccess.oneMessageModel.subject
                 }
 
-                QNAMWebView {
+                Qt5NAMWebViewer {
                     id: messageView
                     networkAccessManager: imapAccess.msgQNAM
-
                     preferredWidth: view.width
-
                     // Without specifying the width here, plaintext e-mails would cause useless horizontal scrolling
                     width: parent.width
 
@@ -134,18 +134,9 @@ Page {
         }
     }
 
-//    PageHeader {
-//        id: header
-//        text: imapAccess.oneMessageModel.subject
-//        anchors {left: parent.left; right: parent.right; top: parent.top}
-//    }
-
     ToolbarItems {
         id: oneMailTools
         visible: true
-
-        BackButton {}
-
         ToggleableToolIcon {
             id: messageReadButton
             toggled: imapAccess.oneMessageModel.isMarkedRead

@@ -1,0 +1,2 @@
+/usr/bin/ar cr libStreams.a  CMakeFiles/Streams.dir/src/Streams/DeletionWatcher.cpp.o CMakeFiles/Streams.dir/src/Streams/FakeSocket.cpp.o CMakeFiles/Streams.dir/src/Streams/IODeviceSocket.cpp.o CMakeFiles/Streams.dir/src/Streams/Socket.cpp.o CMakeFiles/Streams.dir/src/Streams/SocketFactory.cpp.o CMakeFiles/Streams.dir/src/Streams/3rdparty/rfc1951.cpp.o CMakeFiles/Streams.dir/Streams_automoc.cpp.o
+/usr/bin/ranlib libStreams.a

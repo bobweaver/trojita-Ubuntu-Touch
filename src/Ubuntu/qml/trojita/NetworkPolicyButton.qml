@@ -22,11 +22,10 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-//import com.nokia.extras 1.1
 
 ToolbarButton {
     id: networkPolicyButton
-    iconSource: "icon-m-settings-keychain.svg" // + (state.length ? state : "unknown")
+    iconSource: "icon-m-settings-keychain.svg"
 
     states: [
         State {
